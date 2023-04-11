@@ -47,3 +47,14 @@ switch ($input) {
         $output = "$env:USERPROFILE\Downloads\TorBrowser.exe"
     }
 }
+
+try {
+    Invoke-WebRequest $url -OutFile $output -ErrorAction Stop
+    Write-Host "Download complete!"
+} catch {
+    if ($_.Exception.Response.StatusCode.Value__ -eq 404) {
+        Write-Host "Error: The URL cannot be found."
+    } else {
+        Write-Host "Error: $_"
+    }
+}
