@@ -1,5 +1,3 @@
-Import-Module Microsoft.PowerShell.Utility
-
 $validInput = $false
 while ($validInput -eq $false) {
     Write-Host "Please select a browser to download:"
@@ -20,13 +18,49 @@ while ($validInput -eq $false) {
 
 # Download selected browser
 switch ($input) {
-    1 { Invoke-RestMethod -Uri "https://dl.google.com/chrome/install/standalone/enterprise/GoogleChromeEnterpriseBundle64.msi" -OutFile "$env:USERPROFILE\Downloads\GoogleChromeEnterpriseBundle64.msi" }
-    2 { Invoke-RestMethod -Uri "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US" -OutFile "$env:USERPROFILE\Downloads\FirefoxSetup.exe" }
-    3 { Invoke-RestMethod -Uri "https://github.com/Hibbiki/chromium-win64/releases/latest/download/chromium-win64.zip" -OutFile "$env:USERPROFILE\Downloads\chromium-win64.zip" }
-    4 { Invoke-RestMethod -Uri "https://laptop-updates.brave.com/latest/winx64" -OutFile "$env:USERPROFILE\Downloads\BraveSetup.exe" }
-    5 { Invoke-RestMethod -Uri "https://github.com/Eloston/ungoogled-chromium/releases/latest/download/ungoogled-chromium-94.0.4606.81-1.windows.7z" -OutFile "$env:USERPROFILE\Downloads\ungoogled-chromium.7z" }
-    6 { Invoke-RestMethod -Uri "https://gitlab.com/librewolf-community/browser/windows/uploads/4d3f15006bae10b14938f78f8d212d37/LibreWolf-100.0.1.en-US.win64.zip" -OutFile "$env:USERPROFILE\Downloads\LibreWolf.zip" }
-    7 { Invoke-RestMethod -Uri "https://www.torproject.org/dist/win64/torbrowser/11.0.5/torbrowser-install-win64-11.0.5_en-US.exe" -OutFile "$env:USERPROFILE\Downloads\TorBrowser.exe" }
+    1 { 
+        $url = "https://dl.google.com/chrome/install/standalone/enterprise/GoogleChromeEnterpriseBundle64.msi"
+        $output = "$env:USERPROFILE\Downloads\GoogleChromeEnterpriseBundle64.msi"
+    }
+    2 { 
+        $url = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"
+        $output = "$env:USERPROFILE\Downloads\FirefoxSetup.exe"
+    }
+    3 { 
+        $url = "https://github.com/Hibbiki/chromium-win64/releases/latest/download/chromium-win64.zip"
+        $output = "$env:USERPROFILE\Downloads\chromium-win64.zip"
+    }
+    4 { 
+        $url = "https://laptop-updates.brave.com/latest/winx64"
+        $output = "$env:USERPROFILE\Downloads\BraveSetup.exe"
+    }
+    5 { 
+        $url = "https://github.com/Eloston/ungoogled-chromium/releases/latest/download/ungoogled-chromium-94.0.4606.81-1.windows.7z"
+        $output = "$env:USERPROFILE\Downloads\ungoogled-chromium.7z"
+    }
+    6 { 
+        $url = "https://gitlab.com/librewolf-community/browser/windows/uploads/4d3f15006bae10b14938f78f8d212d37/LibreWolf-100.0.1.en-US.win64.zip"
+        $output = "$env:USERPROFILE\Downloads\LibreWolf.zip"
+    }
+    7 { 
+        $url = "https://www.torproject.org/dist/win64/torbrowser/11.0.5/torbrowser-install-win64-11.0.5_en-US.exe"
+        $output = "$env:USERPROFILE\Downloads\TorBrowser.exe"
+    }
 }
 
-Write-Host "Download complete!"
+try {
+    Invoke-WebRequest $url -OutFile $output -ErrorAction Stop
+    Write-Host "Download complete!"
+
+    # Check if downloaded file is a zip or 7z archive
+    if ($output.EndsWith(".zip") -or $output.EndsWith(".7z")) {
+        # Install 7zip
+        $7zipInstallerUrl = "https://www.7-zip.org/a/7z2102-x64.exe"
+        $7zipInstallerOutput = "$env:USERPROFILE\Downloads\7zipInstaller.exe"
+
+        Invoke-WebRequest $7zipInstallerUrl -OutFile $7zipInstallerOutput -ErrorAction Stop
+        Write-Host "7zip installer downloaded."
+
+        # Run 7zip installer
+        $7zipParams = "/S /D=$env:ProgramFiles\7-Zip"
+        Start-Process -FilePath $
