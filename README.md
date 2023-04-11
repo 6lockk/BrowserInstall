@@ -1,2 +1,2 @@
 # BrowserInstall
-Powershell script to inatll any popular browser
+Powershell script to install any popular browser
