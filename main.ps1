@@ -47,20 +47,3 @@ switch ($input) {
         $output = "$env:USERPROFILE\Downloads\TorBrowser.exe"
     }
 }
-
-try {
-    Invoke-WebRequest $url -OutFile $output -ErrorAction Stop
-    Write-Host "Download complete!"
-
-    # Check if downloaded file is a zip or 7z archive
-    if ($output.EndsWith(".zip") -or $output.EndsWith(".7z")) {
-        # Install 7zip
-        $7zipInstallerUrl = "https://www.7-zip.org/a/7z2102-x64.exe"
-        $7zipInstallerOutput = "$env:USERPROFILE\Downloads\7zipInstaller.exe"
-
-        Invoke-WebRequest $7zipInstallerUrl -OutFile $7zipInstallerOutput -ErrorAction Stop
-        Write-Host "7zip installer downloaded."
-
-        # Run 7zip installer
-        $7zipParams = "/S /D=$env:ProgramFiles\7-Zip"
-        Start-Process -FilePath $
